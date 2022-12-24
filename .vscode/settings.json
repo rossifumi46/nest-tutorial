@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": false
+  },
+  "eslint.validate": ["javascript", "html", "typescript"],
+  "[html,css]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": false
+    }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}

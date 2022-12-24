@@ -1,20 +1,39 @@
-import { Controller, Get, Post, Redirect, Body } from '@nestjs/common';
-import { AppService } from './app.service';
+import {
+  Controller,
+  Post,
+  Request,
+  UseGuards,
+  Get,
+  Body,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from './auth/auth.service';
+import { Public } from './common/decorators/public.decorator';
+import { CreateUserDto } from './user/dto/create-user.dto';
+import { UserService } from './user/user.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
-  @Get()
-  index() {
-    return { articles: [] };
+  @Public()
+  @UseGuards(AuthGuard('local'))
+  @Post('auth/login')
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
-  @Post('articles')
-  @Redirect('/', 301)
-  create(@Body() body: any): void {
-    // const id = articles.length + 1;
-    // const article = new Article(body.title, body.content, id);
-    // articles.push(article);
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
+
+  @Public()
+  @Post('auth/signup')
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 }
