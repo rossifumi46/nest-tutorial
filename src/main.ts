@@ -20,6 +20,7 @@ async function bootstrap() {
     new TimeoutInterceptor(),
     // new RemovePasswordInterceptor(),
   );
+  app.enableCors();
   await app.listen(3002);
 }
 bootstrap();

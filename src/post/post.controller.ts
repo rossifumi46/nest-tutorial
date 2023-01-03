@@ -62,10 +62,10 @@ export class PostController {
     @Req() request: RequestWithUser,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    // return this.postService.uploadFile(request.user.id, {
-    //   path: file.path,
-    //   filename: file.originalname,
-    //   mimetype: file.mimetype,
-    // });
+    return this.postService.uploadFile({
+      path: file.path,
+      filename: file.originalname,
+      mimetype: file.mimetype,
+    });
   }
 }

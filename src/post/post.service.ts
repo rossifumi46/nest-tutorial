@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
+import { LocalFileDto } from './dto/local-file.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import LocalFile from './entities/local-file.entity';
 import { Post } from './entities/post.entity';
@@ -39,10 +40,14 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
-  findAll() {
-    return this.postRepository.find({
+  async findAll() {
+    const posts = await this.postRepository.find({
       relations: ['tags'],
     });
+    return posts.map((item) => ({
+      ...item,
+      content: JSON.parse(item.content),
+    }));
   }
 
   async findOne(id: number) {
@@ -74,7 +79,7 @@ export class PostService {
     return this.tagRepository.save(tag);
   }
 
-  async uploadFile() {
+  async uploadFile(fileData: LocalFileDto) {
     const newFile = await this.localFilesRepository.create(fileData);
     await this.localFilesRepository.save(newFile);
     return newFile;
